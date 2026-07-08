@@ -1,0 +1,16 @@
+# Java
+*.class
+
+# Python
+__pycache__/
+*.pyc
+
+# OS / Editor junk
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
