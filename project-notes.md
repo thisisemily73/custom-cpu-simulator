@@ -51,3 +51,24 @@ Design CPU architecture:
 - Memory model
 - Instruction set
 - Execution cycle
+
+-----------------------------------------------------------
+
+## July 8 — Instruction Parser Completed
+
+Milestone:
+The CPU can now transform assembly-like text commands into structured Instruction objects.
+
+Key design decision:
+Changed from fixed instruction fields (register + value) to a flexible operand-based model because different instructions require different operand types.
+
+Example:
+LOAD R1, 5
+→ opcode = LOAD
+→ operand1 = R1
+→ operand2 = 5
+
+ADD R1, R2
+→ opcode = ADD
+→ operand1 = R1
+→ operand2 = R2
