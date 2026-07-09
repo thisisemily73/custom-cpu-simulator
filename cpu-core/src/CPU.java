@@ -8,35 +8,48 @@ public class CPU {
 
     static Register R1 = new Register();
     static Register R2 = new Register();
-    static ALU ALU = new ALU();
-    static Memory Memory = new Memory(256); // 256 bytes of memory
+    static ALU alu = new ALU();
+    static Memory memory = new Memory(256); // 256 bytes of memory
 
     private static int pc; // program counter
     private static boolean running;
+    private static boolean zeroFlag; // zero flag for conditional operations
+    private static boolean jumped; // flag to indicate if a jump occurred
 
-    public CPU () {
+    public CPU() {
         // Initialize CPU components if needed
         pc = 0;
         running = true;
+        zeroFlag = false;
+        jumped = false;
     }
 
     public static void main(String[] args) {
+        new CPU();
 
         System.out.println("Custom CPU Simulator is running...");
 
         try {
             List<String> lines = Files.readAllLines(
-                    Paths.get("../../programs/store-value.txt")
+                    Paths.get("../../programs/jump-test.txt")
             );
 
             while (running) {
+
+                jumped = false;
+
                 String line = lines.get(pc);
                 System.out.println("PC = " + pc + ": " + line);
-                Instruction instruction = parseInstruction(line);
-                executeInstruction(instruction, R1, R2);
-                pc++; // Move to the next instruction
 
-                if (pc >= lines.size()) {
+                Instruction instruction = parseInstruction(line);
+
+                executeInstruction(instruction, R1, R2);
+
+                if (!jumped) {
+                    pc++;
+                }
+
+                if (running && pc >= lines.size()) {
                     System.out.println("End of program reached. ENDED WITHOUT HALT.");
                     running = false;
                 }
@@ -54,9 +67,8 @@ public class CPU {
 
         String opcode = parts[0];
 
-        String operand1 = parts[1].replace(",", "");
-
-        String operand2 = parts[2];
+        String operand1 = parts.length > 1 ? parts[1].replace(",", "") : null;
+        String operand2 = parts.length > 2 ? parts[2] : null;
 
         return new Instruction(opcode, operand1, operand2);
     }
@@ -86,24 +98,29 @@ public class CPU {
 
                 if (operand1.equals("R1") && operand2.equals("R2")) {
 
-                    int result = ALU.add(
+                    int result = alu.add(
                             R1.getValue(),
                             R2.getValue()
                     );
 
                     R1.setValue(result);
+                    zeroFlag = (result == 0);
                 }
 
                 break;
             case "SUB":
                 // Subtract values from registers
                 if (operand1.equals("R1") && operand2.equals("R2")) {
-                    int result = ALU.subtract(R1.getValue(), R2.getValue());
+                    int result = alu.subtract(R1.getValue(), R2.getValue());
                     R1.setValue(result);
+                    zeroFlag = (result == 0);
+
                 } else if (operand1.equals("R2") && operand2.equals("R1")) {
-                    int result = ALU.subtract(R2.getValue(), R1.getValue());
+                    int result = alu.subtract(R2.getValue(), R1.getValue());
                     R2.setValue(result);
+                    zeroFlag = (result == 0);
                 }
+
                 break;
             case "STORE":
                 // Store value from register to memory (not implemented)
@@ -111,14 +128,14 @@ public class CPU {
 
                 if (operand1.equals("R1")) {
 
-                    Memory.write(
+                    memory.write(
                             address,
                             R1.getValue()
                     );
 
                 } else if (operand1.equals("R2")) {
 
-                    Memory.write(
+                    memory.write(
                             address,
                             R2.getValue()
                     );
@@ -127,6 +144,22 @@ public class CPU {
             case "HALT":
                 running = false;
                 System.out.println("CPU halted.");
+                break;
+            case "JMP":
+                pc = Integer.parseInt(operand1);
+                jumped = true;
+                break;
+            case "JZ":
+                if (zeroFlag) {
+                    pc = Integer.parseInt(operand1);
+                    jumped = true;
+                }
+                break;
+            case "JNZ":
+                if (!zeroFlag) {
+                    pc = Integer.parseInt(operand1);
+                    jumped = true;
+                }
                 break;
             default:
                 System.out.println("Unknown opcode: " + opcode);
