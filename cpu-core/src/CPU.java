@@ -11,6 +11,15 @@ public class CPU {
     static ALU ALU = new ALU();
     static Memory Memory = new Memory(256); // 256 bytes of memory
 
+    private static int pc; // program counter
+    private static boolean running;
+
+    public CPU () {
+        // Initialize CPU components if needed
+        pc = 0;
+        running = true;
+    }
+
     public static void main(String[] args) {
 
         System.out.println("Custom CPU Simulator is running...");
@@ -20,30 +29,17 @@ public class CPU {
                     Paths.get("../../programs/store-value.txt")
             );
 
-            for (String line : lines) {
-
+            while (running) {
+                String line = lines.get(pc);
+                System.out.println("PC = " + pc + ": " + line);
                 Instruction instruction = parseInstruction(line);
-
                 executeInstruction(instruction, R1, R2);
+                pc++; // Move to the next instruction
 
-                System.out.println(
-                        "Executed: " + instruction.getOpcode()
-                        + " "
-                        + instruction.getOperand1()
-                        + " "
-                        + instruction.getOperand2()
-                );
-
-                System.out.println(
-                        "R1 = " + R1.getValue()
-                        + " | R2 = " + R2.getValue()
-                );
-
-                System.out.println(
-                        "Memory[0] = " + Memory.read(0)
-                );
-
-                System.out.println("----------------");
+                if (pc >= lines.size()) {
+                    System.out.println("End of program reached. ENDED WITHOUT HALT.");
+                    running = false;
+                }
             }
 
         } catch (IOException e) {
@@ -127,6 +123,10 @@ public class CPU {
                             R2.getValue()
                     );
                 }
+                break;
+            case "HALT":
+                running = false;
+                System.out.println("CPU halted.");
                 break;
             default:
                 System.out.println("Unknown opcode: " + opcode);

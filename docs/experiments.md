@@ -207,6 +207,36 @@ Memory[0] = 42
 The CPU now supports persistent data storage using a memory subsystem.
 
 -----------------------------------------------------------
+
+# Experiment 7: Fetch-Decode-Execute Loop
+
+## Goal
+Transfer instruction sequencing control from Java to the CPU model using a program counter.
+
+## Method
+
+The CPU uses a program counter (PC) to track the current instruction address.
+
+Each cycle:
+1. Fetch instruction at PC
+2. Decode instruction
+3. Execute instruction
+4. Increment PC
+
+## Result
+
+The CPU successfully executed instructions sequentially using the program counter.
+
+Example output:
+
+PC = 0: LOAD R1, 42
+PC = 1: STORE R1, 0
+
+## Conclusion
+
+The CPU now controls instruction flow through a fetch-decode-execute cycle.
+
+-----------------------------------------------------------
 -----------------------------------------------------------
 
 # Future Experiment 2: Fibonacci

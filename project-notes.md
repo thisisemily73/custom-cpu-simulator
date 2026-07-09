@@ -72,3 +72,9 @@ ADD R1, R2
 → opcode = ADD
 → operand1 = R1
 → operand2 = R2
+
+## Program Counter Added
+
+The CPU now includes a program counter (PC) to track the current instruction being executed.
+
+Previously, Java controlled program execution using a loop. The next update will transfer instruction sequencing responsibility to the CPU itself through a fetch-decode-execute cycle.
