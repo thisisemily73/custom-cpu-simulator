@@ -9,6 +9,7 @@ public class CPU {
     static Register R1 = new Register();
     static Register R2 = new Register();
     static ALU ALU = new ALU();
+    static Memory Memory = new Memory(256); // 256 bytes of memory
 
     public static void main(String[] args) {
 
@@ -16,7 +17,7 @@ public class CPU {
 
         try {
             List<String> lines = Files.readAllLines(
-                    Paths.get("../../programs/subtract-two-numbers.txt")
+                    Paths.get("../../programs/store-value.txt")
             );
 
             for (String line : lines) {
@@ -36,6 +37,10 @@ public class CPU {
                 System.out.println(
                         "R1 = " + R1.getValue()
                         + " | R2 = " + R2.getValue()
+                );
+
+                System.out.println(
+                        "Memory[0] = " + Memory.read(0)
                 );
 
                 System.out.println("----------------");
@@ -106,6 +111,22 @@ public class CPU {
                 break;
             case "STORE":
                 // Store value from register to memory (not implemented)
+                int address = Integer.parseInt(operand2);
+
+                if (operand1.equals("R1")) {
+
+                    Memory.write(
+                            address,
+                            R1.getValue()
+                    );
+
+                } else if (operand1.equals("R2")) {
+
+                    Memory.write(
+                            address,
+                            R2.getValue()
+                    );
+                }
                 break;
             default:
                 System.out.println("Unknown opcode: " + opcode);

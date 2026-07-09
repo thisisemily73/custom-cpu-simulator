@@ -12,7 +12,11 @@ D:
 
 ## Memory
 
-Size:
+The CPU uses a Von Neumann-style memory model where instructions and data share the same memory space.
+
+This design simplifies the architecture and allows programs to be loaded and executed from the same memory subsystem.
+
+Size: 256 bytes
 
 ## Instructions
 

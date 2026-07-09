@@ -4,7 +4,9 @@
 | July 8 | Instruction parser | v |
 | July 8 | LOAD instruction | v |
 | July 8 | ADD instruction + ALU | v |
-| July 8 | SUB instruction + ALU | v | 
+| July 8 | SUB instruction + ALU | v |
+| July 8 | STORE instruction + Memory subsystem | v | 
+
 
 -----------------------------------------------------------
 
@@ -175,20 +177,36 @@ R1 = 6 | R2 = 4
 The CPU now supports arithmetic operations through the ALU, including addition and subtraction. The register-to-ALU-to-register data path is functional.
 
 -----------------------------------------------------------
------------------------------------------------------------
-# Future Experiment 1: Basic Arithmetic Program
 
-## Program
-LOAD R1, 5
-LOAD R2, 3
-ADD R1, R2
+# Experiment 6: STORE Instruction Execution
+
+## Goal
+Test whether the CPU can transfer data from registers into memory.
+
+## Input
+
+LOAD R1, 42
 STORE R1, 0
 
 ## Expected Behavior
-R1 should contain 8, memory 0 should store 8.
 
-## Execution Trace
+The value 42 should be written into memory address 0.
 
+## Result
+
+The CPU successfully executed STORE.
+
+Register state:
+R1 = 42
+
+Memory state:
+Memory[0] = 42
+
+## Conclusion
+
+The CPU now supports persistent data storage using a memory subsystem.
+
+-----------------------------------------------------------
 -----------------------------------------------------------
 
 # Future Experiment 2: Fibonacci

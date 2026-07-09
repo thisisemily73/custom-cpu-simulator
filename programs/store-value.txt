@@ -1,0 +1,2 @@
+LOAD R1, 42
+STORE R1, 0
